@@ -1,11 +1,22 @@
 use strict;
 use warnings;
 
-my ($mode, $text) = @ARGV;
-die "Usage: $0 encode|decode 'text'\n" unless $mode && $text;
+#my ($mode, $text) = @ARGV;
+my ($mode, $text, $cipher) = @ARGV;
+#die "Usage: $0 encode|decode 'text'\n" unless $mode && $text;
+die "Usage: $0 encode|decode 'text' 'cipher_alphabet'\n" unless $mode && $text && $cipher;
+
 
 my $plain  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-my $cipher = 'ZYXWVUTSRQPONMLKJIHGFEDCBAzyxwvutsrqponmlkjihgfedcba';
+#my $cipher = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+
+if (length($cipher) < length($plain)) {
+    warn "Character count must match plain; padding with 'a'\n";
+    $cipher .= 'a' x (length($plain) - length($cipher));
+} elsif (length($cipher) > length($plain)) {
+    warn "Alphabet shorter than plain; truncating\n";
+    $cipher = substr($cipher, 0, length($plain));
+}
 
 my %encode_map;
 my %decode_map;
